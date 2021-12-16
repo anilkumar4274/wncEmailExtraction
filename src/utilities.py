@@ -67,3 +67,15 @@ def unzipFiles(data_directory, file_name):
             zip_ref.extractall(data_directory)
     except(UnicodeEncodeError, AttributeError, TypeError, FileNotFoundError) as e:
         print("exception --- ", e)
+
+#Get count of files as per extensions
+def getCountOfFiles(directory):
+    extensionsList = []
+    attachmentCount = dict()
+    for file in get_all_filepaths(directory):
+        extensionsList.append(file.split(".")[-1].lower())
+
+    for ext in set(extensionsList):
+        attachmentCount[ext] = extensionsList.count(ext)
+
+    return attachmentCount

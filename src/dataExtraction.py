@@ -30,24 +30,23 @@ for sub_dir in list_data_subfolders:
 utilities.convertJsonToStructuredFormat(output_directory)
 
 #Extract data from the Acrobat PDF
-subDirs, files = utilities.getSubDirectoriesAndFiles(output_directory)
-ind = 0
 paths = []
+editPDFCount = 0
+nonEditPDFCount = 0
 
-try:
-    for subDir in subDirs:
-        for file in files[ind]:
-            paths.append(output_directory+subDir+"/"+file)
-        ind = ind+1
-    print(paths)
-except(UnicodeEncodeError, AttributeError, TypeError, FileNotFoundError) as e:
-    print("exception --- ", e)
+for filePath in utilities.get_all_filepaths(output_directory):
+    paths.append(filePath)
 
 for path in paths:
     try:
-        if path.endswith(".pdf"):
-            acroPDFExtraction.extractAcroPdfData(path)
+        if path.endswith(".pdf") or path.endswith(".PDF"):
+            editPDFCount, nonEditPDFCount = acroPDFExtraction.extractAcroPdfData(path, editPDFCount, nonEditPDFCount)
     except(UnicodeEncodeError, AttributeError, TypeError, FileNotFoundError) as e:
-        print("exception --- ", e)
+        print("Acrobat exception", e)
 
+print("editPDFCount", editPDFCount)
+print("nonEditPDFCount", nonEditPDFCount)
+
+# Get count of file types
+print(utilities.getCountOfFiles(output_directory))
 
